@@ -1,0 +1,222 @@
+Python Automation — APIs & HTTP Requests
+
+APIs let your scripts talk to other systems: CRMs, payment gateways, church apps, analytics tools, etc.
+
+In Python, the go-to library for HTTP is requests.
+
+🔌 1. Installing requests
+pip install requests
+
+
+Then:
+
+import requests
+
+🌐 2. Basic GET Request
+import requests
+
+url = "https://api.example.com/users"
+
+response = requests.get(url)
+
+print(response.status_code)  # 200, 404, 500, etc.
+print(response.text)         # raw text
+
+📦 3. Parsing JSON Responses
+
+Most APIs return JSON.
+
+data = response.json()
+print(data)
+
+
+Example:
+
+user = data["user"]
+email = user["email"]
+
+🧾 4. Sending Query Parameters
+
+Use params for things like ?page=2&limit=50.
+
+payload = {
+    "page": 2,
+    "limit": 50
+}
+
+response = requests.get("https://api.example.com/users", params=payload)
+
+📤 5. POST Requests (Sending Data)
+url = "https://api.example.com/users"
+
+payload = {
+    "name": "Ron",
+    "email": "ron@example.com"
+}
+
+response = requests.post(url, json=payload)
+
+
+json=payload → sends JSON body
+
+data=payload → sends form-encoded body
+
+🧱 6. Headers (Auth, Content-Type, etc.)
+headers = {
+    "Authorization": "Bearer YOUR_TOKEN_HERE",
+    "Content-Type": "application/json"
+}
+
+response = requests.get("https://api.example.com/me", headers=headers)
+
+🔐 7. API Keys (Basic Pattern)
+
+Never hard-code keys in real projects. Use env variables.
+
+import os
+import requests
+
+API_KEY = os.getenv("MY_API_KEY")
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}"
+}
+
+response = requests.get("https://api.example.com/data", headers=headers)
+
+🚨 8. Handling Errors Properly
+import requests
+
+try:
+    res = requests.get("https://api.example.com/data", timeout=5)
+    res.raise_for_status()  # raises HTTPError for 4xx/5xx
+    data = res.json()
+except requests.exceptions.Timeout:
+    print("Request timed out")
+except requests.exceptions.HTTPError as e:
+    print("HTTP error:", e, "| Status:", res.status_code)
+except Exception as e:
+    print("Unexpected error:", e)
+
+⏱ 9. Timeouts (Important for Automation)
+
+Always use timeouts in automation scripts so they don’t hang forever.
+
+res = requests.get("https://api.example.com/data", timeout=10)
+
+📄 10. Pagination Pattern
+
+Many APIs return data in pages.
+
+Example pattern:
+
+import requests
+
+url = "https://api.example.com/users"
+params = {"page": 1}
+all_users = []
+
+while True:
+    res = requests.get(url, params=params)
+    res.raise_for_status()
+    data = res.json()
+
+    all_users.extend(data["results"])
+
+    if not data.get("next_page"):
+        break
+
+    params["page"] = data["next_page"]
+
+🔁 11. Retry Logic (Simple Version)
+
+Good for flaky APIs or unstable networks.
+
+import time
+import requests
+
+def get_with_retry(url, retries=3, delay=2):
+    for attempt in range(retries):
+        try:
+            res = requests.get(url, timeout=5)
+            res.raise_for_status()
+            return res
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed:", e)
+            time.sleep(delay)
+    return None
+
+res = get_with_retry("https://api.example.com/data")
+
+📬 12. Sending Data to a Webhook
+
+Great for pushing events/logs/notifications.
+
+import requests
+
+webhook_url = "https://hooks.example.com/endpoint"
+
+payload = {
+    "event": "user_signup",
+    "user_id": 123,
+}
+
+requests.post(webhook_url, json=payload)
+
+🧪 13. Example: Church Automation Use Case
+Fetch attendance data from an API and save to a file:
+import requests
+from pathlib import Path
+import json
+
+API_URL = "https://api.example.com/church/attendance"
+
+res = requests.get(API_URL, timeout=10)
+res.raise_for_status()
+
+data = res.json()
+
+output_file = Path("attendance.json")
+output_file.write_text(json.dumps(data, indent=4))
+
+print("Attendance data saved.")
+
+🧠 14. Organizing API Code (Client Class)
+import requests
+
+class APIClient:
+    def __init__(self, base_url, token=None):
+        self.base_url = base_url.rstrip("/")
+        self.token = token
+
+    def _headers(self):
+        headers = {"Content-Type": "application/json"}
+        if self.token:
+            headers["Authorization"] = f"Bearer {self.token}"
+        return headers
+
+    def get(self, endpoint, **kwargs):
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
+        res = requests.get(url, headers=self._headers(), **kwargs)
+        res.raise_for_status()
+        return res.json()
+
+    def post(self, endpoint, payload=None, **kwargs):
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
+        res = requests.post(url, json=payload or {}, headers=self._headers(), **kwargs)
+        res.raise_for_status()
+        return res.json()
+
+
+Usage:
+
+client = APIClient("https://api.example.com", token="YOUR_API_TOKEN")
+users = client.get("users")
+
+📘 Quick Reference
+requests.get(url, params=..., headers=..., timeout=...)
+requests.post(url, json=..., headers=...)
+response.status_code
+response.text
+response.json()
+response.raise_for_status()
