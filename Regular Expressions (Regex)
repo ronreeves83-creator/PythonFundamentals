@@ -1,0 +1,241 @@
+Python Automation — Regular Expressions (Regex)
+
+Regular expressions (regex) are patterns used to search, match, and manipulate text.
+
+They’re clutch when you need to:
+
+Validate emails, phone numbers, IDs
+
+Extract data from messy text
+
+Clean logs, reports, or copy/pasted chaos
+
+Parse semi-structured stuff without a full parser
+
+In Python, regex is handled by the re module.
+
+📦 1. Importing re
+import re
+
+🔍 2. Basic search and match
+re.search — look anywhere in the string
+import re
+
+text = "User email: ron@example.com"
+
+match = re.search(r"\w+@\w+\.\w+", text)
+if match:
+    print(match.group())   # ron@example.com
+
+re.match — only checks at the beginning
+re.match(r"\d+", "123abc")   # match
+re.match(r"\d+", "abc123")   # no match
+
+
+In most automation cases, search is more useful.
+
+📜 3. Common Regex Patterns
+Character basics
+
+\d → digit
+
+\w → word character (letters, digits, underscore)
+
+\s → whitespace (space, tab, newline)
+
+. → any character (except newline)
+
+Uppercase versions are opposites:
+
+\D → non-digit
+
+\W → non-word
+
+\S → non-whitespace
+
+Quantifiers
+
++ → one or more
+
+* → zero or more
+
+? → zero or one
+
+{n} → exactly n
+
+{n,} → at least n
+
+{n,m} → between n and m
+
+Example:
+
+r"\d+"       # 1, 23, 456
+r"\w{3,8}"   # 3 to 8 word characters
+
+Anchors
+
+^ → start of string
+
+$ → end of string
+
+r"^Hello"    # must start with "Hello"
+r"bye$"      # must end with "bye"
+
+Groups & Alternation
+
+(...) → group
+
+| → OR
+
+r"(Mr|Ms|Dr)\. \w+"
+
+
+Matches:
+
+Mr. Smith
+
+Dr. Ron
+
+✅ 4. Validating Patterns (e.g., Email, Phone)
+Email (simple version)
+pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+
+text = "ron@example.com"
+if re.match(pattern, text):
+    print("Valid email")
+
+Phone (US-style example)
+pattern = r"^\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4}$"
+
+numbers = ["555-123-4567", "(555)123-4567", "5551234567"]
+
+for num in numbers:
+    if re.match(pattern, num):
+        print("Valid:", num)
+
+🧵 5. findall — Get All Matches
+text = "Emails: ron@example.com, info@church.org"
+
+pattern = r"[\w\.-]+@[\w\.-]+\.\w+"
+matches = re.findall(pattern, text)
+
+print(matches)
+# ['ron@example.com', 'info@church.org']
+
+✂️ 6. sub — Replace With Regex
+text = "Call me at 555-123-4567 or 555-999-8888"
+
+pattern = r"\d{3}-\d{3}-\d{4}"
+
+cleaned = re.sub(pattern, "[REDACTED]", text)
+print(cleaned)
+# Call me at [REDACTED] or [REDACTED]
+
+
+Perfect for log scrubbing or masking sensitive data.
+
+🔎 7. Using Groups
+text = "Name: Ron, Age: 41"
+
+match = re.search(r"Name: (\w+), Age: (\d+)", text)
+if match:
+    name = match.group(1)
+    age = int(match.group(2))
+
+
+group(0) → full match
+
+group(1) → first (...)
+
+group(2) → second (...)
+
+🧱 8. Named Groups (Cleaner)
+text = "User: Ron (ID: 1023)"
+
+pattern = r"User: (?P<name>\w+) \(ID: (?P<id>\d+)\)"
+
+match = re.search(pattern, text)
+
+if match:
+    print(match.group("name"))  # Ron
+    print(match.group("id"))    # 1023
+
+
+Great for readability in bigger automations.
+
+⚙️ 9. Compiled Regex (Performance)
+
+For frequently-used patterns, compile once:
+
+email_pattern = re.compile(r"^[\w\.-]+@[\w\.-]+\.\w+$")
+
+def is_valid_email(email):
+    return email_pattern.match(email) is not None
+
+🧼 10. Real Automation Use Cases
+Extract all URLs from text
+import re
+
+text = """
+Visit https://example.com or http://mychurch.org for more info.
+"""
+
+url_pattern = r"https?://[^\s]+"
+
+urls = re.findall(url_pattern, text)
+print(urls)
+
+Clean up extra spaces
+text = "This   has   too    many   spaces"
+
+cleaned = re.sub(r"\s+", " ", text).strip()
+
+Validate simple ID format
+
+e.g., CH-2025-001
+
+pattern = r"^CH-\d{4}-\d{3}$"
+
+Extract digits from messy strings
+text = "Order #AB-10023-X"
+
+digits = re.findall(r"\d+", text)   # ['10023']
+order_id = digits[0]
+
+🧠 11. Debugging Regex
+
+When your pattern isn’t working:
+
+Start simple, then build up
+
+Test on a site like regex101 (just don’t paste secrets)
+
+Add r"" (raw string) to avoid escaping hell
+
+pattern = r"\d{3}-\d{2}-\d{4}"   # good
+pattern = "\\d{3}-\\d{2}-\\d{4}" # ugly, but works
+
+📘 Quick Reference
+\d       digit
+\w       word char
+\s       whitespace
+.        any char (not newline)
+
++        one or more
+*        zero or more
+?        zero or one
+{n}      exactly n
+{n,}     at least n
+{n,m}    between n and m
+
+^        start of string
+$        end of string
+[...]    character class
+(...)    group
+|        or
+
+findall  # get all matches
+search   # first match anywhere
+match    # match at start
+sub      # replace
+compile  # reuse pattern
