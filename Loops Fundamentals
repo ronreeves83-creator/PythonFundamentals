@@ -1,0 +1,149 @@
+Python Syntax Basics — Loops
+
+Loops let your program repeat actions without rewriting the same code.
+In automation, loops are everywhere — renaming files, processing records, scraping pages, cleaning datasets, etc.
+
+Python has two main loop types:
+for loops and while loops.
+
+🔁 1. For Loops
+
+Used when you need to iterate over a collection (list, string, dict, set, file, etc.) or a range of numbers.
+
+Basic Example
+for i in range(5):
+    print(i)
+
+
+Output:
+
+0
+1
+2
+3
+4
+
+Looping Through a List
+fruits = ["apple", "banana", "mango"]
+
+for fruit in fruits:
+    print(fruit)
+
+Looping Through a String
+for char in "Python":
+    print(char)
+
+Looping Through a Dictionary
+person = {"name": "Ron", "age": 41}
+
+for key, value in person.items():
+    print(key, value)
+
+Looping With Index (enumerate)
+names = ["Ron", "Jay", "Mike"]
+
+for index, name in enumerate(names):
+    print(index, name)
+
+Looping a Specific Number of Times (range)
+for i in range(2, 10, 2):
+    print(i)
+
+
+range(start, stop, step)
+
+🔂 2. While Loops
+
+Used when you don’t know exactly how many times you’ll loop — the loop runs as long as the condition is true.
+
+Basic While Loop
+count = 0
+
+while count < 5:
+    print(count)
+    count += 1
+
+Avoid Infinite Loops (Common Mistake)
+while True:
+    print("This runs forever")
+
+
+Always add a break condition.
+
+Using break to Stop a Loop
+for num in range(10):
+    if num == 5:
+        break
+    print(num)
+
+Using continue to Skip an Iteration
+for num in range(6):
+    if num == 3:
+        continue
+    print(num)
+
+Using pass as a Placeholder
+for _ in range(3):
+    pass  # do nothing (placeholder)
+
+
+Useful when sketching code structure.
+
+⚙️ Real Automation Examples
+Rename Every File in a Folder
+from pathlib import Path
+
+folder = Path("C:/files")
+
+for i, file in enumerate(folder.glob("*.pdf")):
+    file.rename(folder / f"document_{i}.pdf")
+
+Read a File Line by Line
+with open("data.txt") as f:
+    for line in f:
+        print(line.strip())
+
+API Pagination
+import requests
+
+url = "https://api.example.com/users?page=1"
+
+while url:
+    res = requests.get(url).json()
+    process(res["data"])    
+
+    url = res.get("next_page")  # stop when no next page
+
+🧠 Best Practices for Loops
+Keep loops small & focused
+
+Long loops → messy code
+Short loops → maintainable automation
+
+Prefer for loops when iterating collections
+
+for loops are safer and cleaner than while.
+
+Use list comprehensions for transformations
+squares = [x*x for x in range(10)]
+
+Avoid modifying a list while looping over it
+
+Dangerous patterns cause bugs.
+
+📝 Quick Reference
+for item in collection:
+    ...
+
+for index, item in enumerate(collection):
+    ...
+
+for i in range(start, stop, step):
+    ...
+
+while condition:
+    ...
+
+break      # exit loop
+continue   # skip iteration
+pass       # do nothing
