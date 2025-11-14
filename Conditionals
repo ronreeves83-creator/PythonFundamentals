@@ -1,0 +1,172 @@
+Python Syntax Basics — Conditionals
+
+Conditionals let your program make decisions.
+They evaluate expressions and run different blocks of code depending on whether something is True or False.
+
+Think of conditionals like the “if this happens → do that” logic behind every automation script.
+
+🔹 Basic if Statement
+age = 20
+
+if age >= 18:
+    print("Access granted")
+
+
+If the condition is true, the code runs.
+If not… nothing happens.
+
+🔸 if/else Statement
+is_member = False
+
+if is_member:
+    print("Welcome back!")
+else:
+    print("Please sign up!")
+
+
+Use else for the fallback behavior.
+
+🔶 if / elif / else Chain
+temperature = 85
+
+if temperature > 90:
+    print("Too hot")
+elif temperature > 70:
+    print("Warm")
+else:
+    print("Chilly")
+
+
+Use elif (“else if”) when you need multiple checks.
+
+Only the first true condition triggers.
+
+🚨 Indentation Matters
+
+Python doesn’t use {} or ;
+Indentation defines code blocks.
+
+Bad:
+
+if True:
+print("nope")
+
+
+Good:
+
+if True:
+    print("working")
+
+
+Stick to 4 spaces per indent.
+
+🔍 Comparison Operators
+==   # equal
+!=   # not equal
+>    # greater than
+<    # less than
+>=   # greater or equal
+<=   # less or equal
+
+
+Example:
+
+if score >= 70:
+    print("Pass")
+
+🧠 Logical Operators
+
+These combine multiple conditions:
+
+and     # both must be true
+or      # at least one must be true
+not     # flips true/false
+
+
+Examples:
+
+if age > 18 and has_id:
+    print("You're good")
+
+if day == "Saturday" or day == "Sunday":
+    print("Weekend vibes")
+
+if not is_active:
+    print("User inactive")
+
+🎯 Checking Membership
+
+Use in to check lists, strings, and sets.
+
+allowed_roles = ["admin", "editor"]
+
+if "admin" in allowed_roles:
+    print("Access OK")
+
+if "a" in "banana":
+    print("Letter found")
+
+🧪 Nested Conditionals
+
+Avoid over-nesting, but sometimes you need layers:
+
+age = 30
+has_ticket = True
+
+if age >= 18:
+    if has_ticket:
+        print("Enjoy the show")
+
+
+Cleaner alternative using logical operators:
+
+if age >= 18 and has_ticket:
+    print("Enjoy the show")
+
+🧩 Ternary (One-Line If)
+
+Good when you want a compact assignment:
+
+status = "adult" if age >= 18 else "minor"
+
+
+Great for quick decisions in automation scripts.
+
+⚙️ Real Automation Example
+Auto-tag files based on size:
+from pathlib import Path
+
+file = Path("report.pdf")
+
+if file.stat().st_size > 5_000_000:
+    print("Large file, compress it")
+else:
+    print("Small file, upload directly")
+
+Check API response status:
+import requests
+
+response = requests.get("https://api.example.com")
+
+if response.status_code == 200:
+    print("API working")
+else:
+    print("API failed")
+
+📝 Quick Reference
+if condition:
+    block
+
+if condition:
+    block
+else:
+    block
+
+if condition:
+    block
+elif condition:
+    block
+else:
+    block
+
+x = "OK" if condition else "Not OK"
