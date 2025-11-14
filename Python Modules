@@ -1,0 +1,200 @@
+Python Syntax Basics — Modules
+
+Modules let you break your code into separate files so everything isn’t stuffed into one giant script.
+They help organize logic, improve readability, and allow you to reuse code across multiple automation projects.
+
+Think of modules as “containers of functions and variables” you can plug into any script.
+
+📦 1. What Is a Module?
+
+A module is simply a Python file (.py) that contains:
+
+Variables
+
+Functions
+
+Classes
+
+Logic you want to reuse
+
+Example:
+A file named math_utils.py is a module called math_utils.
+
+📥 2. Importing a Module
+Basic import
+import math
+
+print(math.sqrt(25))
+
+Importing specific things
+from math import sqrt
+
+print(sqrt(25))
+
+Importing with an alias
+import datetime as dt
+
+print(dt.datetime.now())
+
+
+Super common practice for large modules.
+
+📁 3. Creating Your Own Module
+Step 1 — create a file
+
+math_utils.py
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+Step 2 — import it in another file
+
+main.py
+
+import math_utils
+
+print(math_utils.add(10, 5))
+
+🧩 4. Using from with Custom Modules
+from math_utils import add
+
+print(add(3, 2))
+
+📂 5. Packages (Folders of Modules)
+
+A package is a folder that contains multiple modules.
+
+Folder structure:
+project/
+    utilities/
+        __init__.py
+        math_utils.py
+        text_utils.py
+    main.py
+
+
+__init__.py tells Python “this folder is a package.”
+
+Importing from a package:
+from utilities.math_utils import add
+
+🔧 6. Built-in Modules You’ll Use Constantly for Automation
+File system modules
+import os
+from pathlib import Path
+import shutil
+
+Data modules
+import json
+import csv
+
+Time & scheduling
+import time
+import datetime
+
+Automation-related
+import requests      # APIs
+import subprocess    # run shell commands
+
+🚀 7. Installing External Modules (Packages)
+
+You’ll use pip to install libraries that aren’t built in.
+
+pip install requests
+
+
+Then:
+
+import requests
+
+🔒 8. Virtual Environments (Best Practice)
+
+Keep dependencies clean per project.
+
+python -m venv venv
+.\venv\Scripts\activate   # Windows
+source venv/bin/activate  # Mac/Linux
+
+
+Install packages inside it:
+
+pip install -r requirements.txt
+
+📄 9. requirements.txt
+
+This file lists your project’s dependencies.
+
+Create it:
+
+pip freeze > requirements.txt
+
+
+Install it:
+
+pip install -r requirements.txt
+
+
+This is essential for automation scripts that run in cloud environments (Lambda, cron servers, CI/CD, etc.)
+
+🧪 10. Module Execution (if __name__ == "__main__":)
+
+Python runs this block ONLY when the file is executed directly, not when imported.
+
+def run():
+    print("Running script")
+
+if __name__ == "__main__":
+    run()
+
+
+Useful for separating “script mode” from “import mode.”
+
+⚙️ Real Automation Examples
+Import a helper to clean text
+from utils.text import clean_text
+
+text = clean_text("   HELLO WORLD   ")
+
+Use a module to handle API requests
+
+api_utils.py
+
+import requests
+
+def get_json(url):
+    return requests.get(url).json()
+
+
+main.py
+
+from api_utils import get_json
+
+data = get_json("https://api.example.com")
+
+Use modules to organize file tasks
+
+file_ops.py
+
+from pathlib import Path
+
+def list_csv(folder):
+    return list(Path(folder).glob("*.csv"))
+
+📝 Quick Reference
+import module
+from module import name
+from module import name as alias
+import module as alias
+
+# custom modules
+def function(): ...
+import my_module
+
+# packages (folders)
+project/
+    package/
+        __init__.py
+        utils.py
