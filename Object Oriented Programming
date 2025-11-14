@@ -1,0 +1,196 @@
+Python Fundamentals — Object-Oriented Programming (OOP)
+
+OOP lets you structure your code using classes and objects — perfect for organizing large automation projects, SaaS backend logic, and reusable tools.
+
+Think of a class like a blueprint, and an object like a house built from that blueprint.
+
+🧱 1. What Is a Class?
+
+A class defines:
+
+how something is structured (attributes)
+
+what it can do (methods)
+
+class Dog:
+    pass
+
+🐾 2. Creating Objects (Instances)
+class Dog:
+    pass
+
+my_dog = Dog()
+
+🛠 3. The __init__ Constructor
+
+This runs automatically when the object is created.
+
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+dog = Dog("Buddy", 3)
+
+🔧 4. Instance Methods
+
+Functions inside a class that act on an object.
+
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(f"{self.name} is barking!")
+
+dog = Dog("Buddy")
+dog.bark()
+
+🏷 5. Attributes (Variables in a Class)
+Instance attribute
+
+(unique to each object)
+
+self.name
+
+Class attribute
+
+(shared by all objects)
+
+class Car:
+    wheels = 4
+
+🧩 6. Example: Useful Automation Class
+from pathlib import Path
+
+class FileCleaner:
+    def __init__(self, folder):
+        self.folder = Path(folder)
+
+    def delete_large_files(self, max_size_mb):
+        for f in self.folder.glob("*.*"):
+            if f.stat().st_size > max_size_mb * 1024 * 1024:
+                f.unlink()
+                print("Deleted:", f.name)
+
+
+Usage:
+
+cleaner = FileCleaner("uploads")
+cleaner.delete_large_files(20)
+
+
+This is how OOP becomes practical in automation.
+
+🧬 7. Inheritance
+
+A class can inherit from another class.
+
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Dog(Animal):
+    def speak(self):
+        print("Woof!")
+
+🔥 8. Super() — Call Parent Methods
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed
+
+🚀 9. Polymorphism
+
+Different classes, same method name:
+
+class Cat:
+    def sound(self):
+        return "Meow"
+
+class Dog:
+    def sound(self):
+        return "Woof"
+
+for pet in [Dog(), Cat()]:
+    print(pet.sound())
+
+🔒 10. Encapsulation
+
+Use underscore _ to signal “don’t touch this.”
+
+class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance
+
+
+Not enforced like Java, but respected by convention.
+
+📝 11. Magic Methods (Dunder Methods)
+
+Special methods that change class behavior.
+
+Common ones:
+
+__str__ — string representation
+def __str__(self):
+    return f"{self.name} ({self.age} yrs old)"
+
+__len__
+def __len__(self):
+    return len(self.items)
+
+__eq__
+def __eq__(self, other):
+    return self.id == other.id
+
+🔗 12. OOP for Automation Projects
+Useful patterns:
+
+Processor classes
+e.g., CSVProcessor, APISync, FileRenamer
+
+Service classes
+e.g., EmailService, LoggerService
+
+Models
+e.g., User, Transaction, Report
+
+Workers
+e.g., a class that handles scheduled jobs
+
+These help you scale from one-off scripts → actual software.
+
+🧪 Real Automation Example: API Client
+import requests
+
+class APIClient:
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+    def get(self, endpoint):
+        res = requests.get(self.base_url + endpoint)
+        res.raise_for_status()
+        return res.json()
+
+
+Usage:
+
+client = APIClient("https://api.example.com/")
+data = client.get("users")
+
+📘 Quick Reference
+class Name:
+    def __init__(self, params):
+        self.attribute = value
+    
+    def method(self):
+        ...
+
+class Child(Parent):
+    def method(self):
+        super().method()
