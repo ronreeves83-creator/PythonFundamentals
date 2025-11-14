@@ -1,0 +1,187 @@
+Python Syntax Basics — Error Handling
+
+Error handling is how you stop your Python scripts from crashing when something goes wrong.
+In automation, errors will happen: missing files, bad inputs, failed API calls, network timeouts — all that chaos.
+
+Good error handling = stable, predictable scripts.
+
+🧱 1. The Try/Except Block
+
+Basic structure:
+
+try:
+    # code that might fail
+except:
+    # what to do if it fails
+
+
+Example:
+
+try:
+    value = int("abc")
+except:
+    print("Conversion failed")
+
+🔍 2. Catching Specific Exceptions
+
+This is the correct way — don’t use a blanket except: unless necessary.
+
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+
+
+More examples:
+
+try:
+    open("missing.txt")
+except FileNotFoundError:
+    print("File not found")
+
+🧠 3. Catching Multiple Exceptions
+try:
+    age = int("forty")
+except (ValueError, TypeError):
+    print("Invalid number")
+
+🔁 4. Using else With Try/Except
+
+else runs only if no error occurs.
+
+try:
+    f = open("data.txt")
+except FileNotFoundError:
+    print("Missing file")
+else:
+    print("File opened successfully")
+
+🔚 5. Using finally
+
+finally runs no matter what — perfect for cleanup.
+
+try:
+    file = open("report.txt")
+    data = file.read()
+except FileNotFoundError:
+    print("Not found")
+finally:
+    print("Finished attempting")
+
+🔐 6. Raising Your Own Errors
+
+Use this when you want to enforce rules in your automation logic.
+
+def process_age(age):
+    if age < 0:
+        raise ValueError("Age cannot be negative")
+
+💡 7. Logging Errors Instead of Printing
+
+For real automation, printing isn’t enough.
+Use logging so you have proper logs:
+
+import logging
+
+logging.basicConfig(level=logging.ERROR)
+
+try:
+    x = 1 / 0
+except ZeroDivisionError as e:
+    logging.error(f"Error occurred: {e}")
+
+🔍 8. Try/Except in Loops
+
+Common in automation — skip bad items and continue.
+
+files = ["good.txt", "missing.txt", "another.txt"]
+
+for f in files:
+    try:
+        content = open(f).read()
+        print("Processed", f)
+    except FileNotFoundError:
+        print("Skipping missing file:", f)
+
+🌐 9. Error Handling in API Calls
+
+APIs fail all the time.
+
+import requests
+
+try:
+    res = requests.get("https://api.example.com/data", timeout=5)
+    res.raise_for_status()
+except requests.exceptions.Timeout:
+    print("API timed out")
+except requests.exceptions.HTTPError:
+    print("Bad response:", res.status_code)
+except Exception as e:
+    print("Other error:", e)
+
+📂 10. File I/O Error Handling
+from pathlib import Path
+
+file = Path("data.csv")
+
+try:
+    data = file.read_text()
+except FileNotFoundError:
+    print("File missing")
+except PermissionError:
+    print("Access denied")
+
+🔄 11. Retry Logic (Manual)
+
+Useful when dealing with unstable networks, APIs, or databases.
+
+import time
+
+def fetch():
+    for i in range(3):
+        try:
+            return requests.get("https://api.example.com/data")
+        except:
+            print("Retrying...")
+            time.sleep(2)
+
+data = fetch()
+
+⚙️ 12. Creating Custom Exceptions
+
+Helps structure large automation apps.
+
+class InvalidRecordError(Exception):
+    pass
+
+def process(record):
+    if "id" not in record:
+        raise InvalidRecordError("Missing 'id' field")
+
+📝 Quick Reference
+try:
+    ...
+except SomeError:
+    ...
+except (Error1, Error2):
+    ...
+else:
+    ...
+finally:
+    ...
+
+raise ValueError("message")      # raise custom error
+logging.error(...)               # proper logging
+
+🚀 Real Automation Example
+Process files safely
+from pathlib import Path
+
+folder = Path("uploads")
+
+for f in folder.glob("*.csv"):
+    try:
+        data = f.read_text()
+        print("Processed:", f.name)
+    except Exception as e:
+        print("Error with file:", f.name, "|", e)
