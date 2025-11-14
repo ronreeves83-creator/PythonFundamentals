@@ -1,0 +1,177 @@
+Python Syntax Basics — Data Types
+
+Python has a small set of core built-in data types.
+These are the building blocks for everything you’ll automate — from file processing to API calls to SaaS backend logic.
+
+Think of them like the ingredients in your automation recipes.
+
+🧩 1. Numbers
+Integers (int)
+
+Whole numbers.
+
+age = 41
+count = -5
+
+Floats (float)
+
+Decimals.
+
+price = 29.99
+temperature = -2.5
+
+Complex numbers (complex)
+
+Not common in automation — used mostly in math-heavy apps.
+
+z = 5 + 3j
+
+🔡 2. Strings (str)
+
+Text data — the most common type in real-world scripts.
+
+name = "Ron"
+message = "Automation ready"
+
+Multiline Strings
+note = """
+This is a
+multiline string.
+"""
+
+String Methods
+
+Useful for cleaning text:
+
+text = "  HELLO  ".strip().lower()
+
+🟦 3. Booleans (bool)
+
+True/False values — essential for conditionals and logic.
+
+is_active = True
+is_admin = False
+
+
+Behind the scenes:
+
+True = 1
+
+False = 0
+
+📦 4. Lists (list)
+
+Ordered, changeable collections.
+
+items = [1, 2, 3, "apple"]
+
+Add items
+items.append("banana")
+
+Access items
+first = items[0]
+
+Slice
+subset = items[1:3]
+
+🗃 5. Tuples (tuple)
+
+Like lists, but immutable (can’t be changed).
+
+coords = (32.5, -84.9)
+
+
+Used in places where data shouldn’t change (like configurations, coordinates, etc.)
+
+🟩 6. Dictionaries (dict)
+
+Key-value pairs — extremely powerful for configs, API data, JSON, etc.
+
+user = {
+    "name": "Ron",
+    "email": "ron@example.com",
+    "is_active": True
+}
+
+Access
+print(user["name"])
+
+Add/edit
+user["role"] = "admin"
+
+🔷 7. Sets (set)
+
+Unordered collection of unique items.
+
+numbers = {1, 2, 3, 3, 4}   # -> {1, 2, 3, 4}
+
+
+Great for:
+
+Removing duplicates
+
+Fast membership checks
+
+🔄 8. NoneType (None)
+
+Represents “no value” or “empty.”
+
+result = None
+
+
+Used a lot when:
+
+A function returns nothing
+
+A value isn’t set yet
+
+Checking if something exists
+
+🧪 Type Checking
+type("hello")       # <class 'str'>
+type(5)             # <class 'int'>
+type(True)          # <class 'bool'>
+
+🔁 Type Conversion
+int("5")            # 5
+float("3.14")       # 3.14
+str(100)            # "100"
+list("ABC")         # ["A", "B", "C"]
+
+
+Used constantly in automation work.
+
+⚙️ Real Automation Examples
+Read JSON → dict
+import json
+
+data = json.loads('{"name": "Ron"}')
+print(data["name"])
+
+Convert CSV row → list
+import csv
+
+with open("users.csv") as f:
+    for row in csv.reader(f):
+        print(row)    # row is a list
+
+Unique items using sets
+emails = ["a@example.com", "a@example.com", "b@example.com"]
+unique = set(emails)
+
+API response → dict
+import requests
+
+res = requests.get("https://api.example.com/user/1").json()
+print(res["email"])
+
+📘 Quick Reference
+int       # whole number
+float     # decimal
+str       # text
+bool      # True or False
+list      # ordered, changeable
+tuple     # ordered, unchangeable
+dict      # key-value store
+set       # unique items
+None      # empty / no value
